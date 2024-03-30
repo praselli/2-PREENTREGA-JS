@@ -23,9 +23,10 @@ alert("¡BIENVENIDO A SU CALCULADORA DE GASTOS DE VIAJE!");
 
 // Alert para avisar el pedido de información:
 
-alert (`A continuación le solicitaremos información
+alert(`A continuación le solicitaremos información
 para poder calcular su viaje.
-Importante: Los valores calculados son estimativos.`);
+IMPORTANTE: Solo puedes ingresar valores numéricos.
+Los valores calculados son estimativos.`);
 
 //------------------------------------------------------------------
 
@@ -36,9 +37,14 @@ alert("CANTIDAD DE PERSONAS y DÍAS DEL VIAJE:");
 // Función para solicitar la cantidad de personas y la cantidad de días de viaje:
 
 function solicitarCantidadPersonasYDias() {
-  cantidadPersonas = parseInt(prompt("Ingrese la cantidad de personas que viajarán (en números enteros):"));
-  cantidadDiasViaje = parseInt(prompt("Ingrese la cantidad de días de su viaje (en números enteros):"));
-}
+  do {
+    cantidadPersonas = parseInt(prompt("Ingrese la cantidad de personas que viajarán."));
+  } while (isNaN(cantidadPersonas)); // Ciclo para que el usuario ingrese un valor numérico
+
+  do {
+    cantidadDiasViaje = parseInt(prompt("Ingrese la cantidad de días de su viaje."));
+  } while (isNaN(cantidadDiasViaje)); // Ciclo para que el usuario ingrese un valor numérico
+};
 
 // Llamada a la función para solicitar cantidad de personas y días de viaje:
 
@@ -60,24 +66,31 @@ let costoTotalAvionYBus = costoBoletoIda + costoBoletoVuelta;
 let transporte = parseInt(prompt("Elija su opción de transporte:\n" + transporteOpciones.map((option, index) => `${index + 1}. ${option}`).join("\n")));
 if (transporte === 1) { // si el transporte es "Auto", entonces:
   costoTotalTransporte = calcularGastosNafta();
-} else { // Y si el transporte no es "Auto", ed decir, si es Avión o AutoBus,  entonces:
+} else { // Y si el transporte no es "Auto", es Avión o AutoBus:
   costoBoletoIda = parseFloat(prompt("Ingrese el costo del boleto de ida por persona:"));
   costoBoletoVuelta = parseFloat(prompt("Ingrese el costo del boleto de vuelta por persona:"));
   costoTotalTransporte = costoTotalAvionYBus * cantidadPersonas; // Costo total del transporte (si es avión o autobus) sumando los costos de ida y vuelta
-}
+};
 
 // Función para calcular los gastos de nafta:
 
 function calcularGastosNafta() {
-    let kmHastaDestino = parseFloat(prompt("Ingrese la cantidad de kilómetros hasta su destino:"));
+  let kmHastaDestino, precioLitroNafta;
+  
+  do {
+    kmHastaDestino = parseFloat(prompt("Ingrese la cantidad de kilómetros hasta su destino:"));
+  } while (isNaN(kmHastaDestino)); // Ciclo para que el usuario ingrese un valor numérico
+  
+  do {
     precioLitroNafta = parseFloat(prompt("Ingrese el precio de litro de nafta:"));
+  } while (isNaN(precioLitroNafta)); // Ciclo para que el usuario ingrese un valor numérico
 
-    let consumoPromedio = 15; // km/litro (Consumo promedio de un auto)
-    let gastosNaftaIdaYVuelta = (kmHastaDestino * 2) / consumoPromedio * precioLitroNafta; // calcula el gasto de nafta haciendo (km hasta el destino x 2) dividido el consumo promedio (15) y multiplicandolo por el precio de la nafta que ingresa el usuario.
-    let gastosNaftaEnDestino = gastosNaftaIdaYVuelta * 0.10; // se considera un 10% más para circular en el destino
+  let consumoPromedio = 15; // km/litro (Consumo promedio de un auto)
+  let gastosNaftaIdaYVuelta = (kmHastaDestino * 2) / consumoPromedio * precioLitroNafta; // calcula el gasto de nafta haciendo (km hasta el destino x 2) dividido el consumo promedio (15) y multiplicandolo por el precio de la nafta que ingresa el usuario.
+  let gastosNaftaEnDestino = gastosNaftaIdaYVuelta * 0.10; // se considera un 10% más para circular en el destino
 
-    return gastosNaftaIdaYVuelta + gastosNaftaEnDestino;
-  }
+  return gastosNaftaIdaYVuelta + gastosNaftaEnDestino;
+};
 
 //------------------------------------------------------------------
 
@@ -88,8 +101,14 @@ alert("GASTOS DE ALOJAMIENTO:");
 // Función para solicitar el costo del alojamiento por noche:
 
 function solicitarCostoAlojamientoPorNoche() {
-  return parseFloat(prompt("Ingrese el costo del alojamiento por noche:"));
-}
+  let costoAlojamientoPorNoche;
+
+  do {
+    costoAlojamientoPorNoche = parseFloat(prompt("Ingrese el costo del alojamiento por noche:"));
+  } while (isNaN(costoAlojamientoPorNoche)); // Ciclo para que el usuario ingrese un valor numérico
+
+  return costoAlojamientoPorNoche;
+};
 
 // Llamada a la función para solicitar el costo del alojamiento por noche:
 
@@ -104,12 +123,18 @@ alert("GASTOS DE COMIDA:");
 // Función para solicitar un gasto promedio de comida por día y por persona:
 
 function solicitarGastoPromedioComida() {
-  gastoPromedioComida = parseFloat(prompt("Ingrese el gasto promedio para gastos de comida por persona y por día:"));
-}
+  let gastoPromedio;
 
-// Llamada a la función para solicitar gasto promedio de comida:
+  do {
+    gastoPromedio = parseFloat(prompt("Ingrese el gasto promedio para gastos de comida por persona y por día:"));
+  } while (isNaN(gastoPromedio)); // Ciclo para que el usuario ingrese un valor numérico
 
-solicitarGastoPromedioComida();
+  return gastoPromedio; // Devolver el valor ingresado por el usuario
+};
+
+// Llamada a la función para solicitar gasto promedio de comida y almacenarlo en la variable correspondiente:
+
+gastoPromedioComida = solicitarGastoPromedioComida();
 
 //------------------------------------------------------------------
 
@@ -122,16 +147,20 @@ alert("GASTOS EXTRAS:");
 function solicitarGastosExtras() {
   let continuar = true;
   while (continuar) {
-    let gastoExtra = parseFloat(prompt(`Ingrese valor de algun gasto extra que ya contemple:
-Ejemplo: Excursión / Alquiler de equipos o Ropa deportiva
-(o ingrese '0' para finalizar):`));
-    if (gastoExtra === 0) {
-      continuar = false;
+    let gastoExtra = parseFloat(prompt(`Ingrese el valor de algún gasto extra que ya haya contemplado:
+Ejemplo: Excursión, Alquiler de equipos, Ropa deportiva, etc.
+(O ingrese '0' para finalizar):`));
+    if (!isNaN(gastoExtra)) {
+      if (gastoExtra === 0) {
+        continuar = false;
+      } else {
+        gastosExtras.push(gastoExtra);
+      }
     } else {
-      gastosExtras.push(gastoExtra);
+      alert("Por favor, ingrese un valor numérico válido.");
     }
   }
-}
+};
 
 // Llamada a la función para solicitar gastos extras:
 
@@ -141,7 +170,7 @@ solicitarGastosExtras();
 
 function calcularTotalComida() {
   return gastoPromedioComida * cantidadDiasViaje * cantidadPersonas;
-}
+};
 
 // Función para calcular el total de los gastos extras:
 
@@ -149,7 +178,7 @@ function calcularTotalExtras() {
   let porcentajeExtras = 0.5; // 50% de los gastos totales de comida
   let totalComida = calcularTotalComida();
   return totalComida * porcentajeExtras;
-}
+};
 
 // Función para calcular datos y mostrar los gastos totales del viaje:
 
@@ -159,38 +188,43 @@ function calcularGastosViaje() {
 
   let costoTotalAlojamiento = costoAlojamientoPorNoche * cantidadDiasViaje * Math.ceil(cantidadPersonas / 2); // Suponiendo que las habitaciones son para dos personas
 
-//------------------------------------------------------------------
+  // Pasar los valores a moneda con dos decimales y separador de miles:
 
-// Pasar los valores a moneda con dos decimales y separador de miles:
+  let costoTotalComidaFormateado = costoTotalComida.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
+  let costoTotalTransporteFormateado = costoTotalTransporte.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
+  let costoTotalExtrasFormateado = costoTotalExtras.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
+  let costoTotalAlojamientoFormateado = costoTotalAlojamiento.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
 
-let costoTotalComidaFormateado = costoTotalComida.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
-let costoTotalTransporteFormateado = costoTotalTransporte.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
-let costoTotalExtrasFormateado = costoTotalExtras.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
-let costoTotalAlojamientoFormateado = costoTotalAlojamiento.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
+  // Alert y Console.log para mostrar gastos por cada rubro:
 
-//------------------------------------------------------------------
-
-// Alert para mostrar gastos por cada rubro:
-
-alert(`GASTOS POR RUBRO:
+  alert(`GASTOS POR RUBRO:
     - Traslado: ${costoTotalTransporteFormateado}
     - Alojamiento: ${costoTotalAlojamientoFormateado}
     - Comida: ${costoTotalComidaFormateado}
     - Gastos extras: ${costoTotalExtrasFormateado}`);
 
-// Calcular el costo total del viaje:
+  console.log(`GASTOS POR RUBRO:
+- Traslado: ${costoTotalTransporteFormateado}
+- Alojamiento: ${costoTotalAlojamientoFormateado}
+- Comida: ${costoTotalComidaFormateado}
+- Gastos extras: ${costoTotalExtrasFormateado}`);
 
-let costoTotalViaje = costoTotalComida + costoTotalTransporte + costoTotalExtras + costoTotalAlojamiento;
+  // Calcular el costo total del viaje:
 
-// Pasar el costo total del viaje a moneda con dos decimales y separador de miles:
+  let costoTotalViaje = costoTotalComida + costoTotalTransporte + costoTotalExtras + costoTotalAlojamiento;
 
-let costoTotalViajeFormateado = costoTotalViaje.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
+  // Pasar el costo total del viaje a moneda con dos decimales y separador de miles:
 
-// Alert para mostrar el costo total del viaje:
+  let costoTotalViajeFormateado = costoTotalViaje.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
 
-alert(`Para su viaje de ${cantidadDiasViaje} días y ${cantidadPersonas} personas
+  // Alert y Console.log para mostrar el costo total del viaje:
+
+  alert(`Para su viaje de ${cantidadDiasViaje} días y ${cantidadPersonas} personas
 el costo estimado total es de: ${costoTotalViajeFormateado}`);
-}
+
+  console.log(`Para su viaje de ${cantidadDiasViaje} días y ${cantidadPersonas} personas
+el costo estimado total es de: ${costoTotalViajeFormateado}`);
+};
 
 // Llamar a la función principal para calcular los gastos del viaje:
 
